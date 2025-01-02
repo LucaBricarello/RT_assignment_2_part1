@@ -5,6 +5,7 @@
 
 #include <nav_msgs/Odometry.h>
 #include <assignment_2_part1/RobotState.h> // Custom message
+#include "geometry_msgs/Point.h"
 
 
 // Global variables ---------------------------------------
@@ -68,6 +69,9 @@ int main (int argc, char **argv)
   
   // Publisher for the robot's state
   state_pub = nh.advertise<assignment_2_part1::RobotState>("/robot_state", 10);
+  
+  // Publisher for the robot target coords
+  ros::Publisher coord_pub = nh.advertise<geometry_msgs::Point>("/targ_coords", 10);
 
   // Subscriber to the /odom topic
   ros::Subscriber odom_sub = nh.subscribe("/odom", 10, odomClbk);
@@ -91,6 +95,7 @@ int main (int argc, char **argv)
   	if (choice == 1)
   	{
   		assignment_2_2024::PlanningGoal goal;
+  		cnt = 0;
   	
   		ROS_INFO("Enter desired coordinate x:\n");
   		std::cin >> goal.target_pose.pose.position.x;
@@ -99,6 +104,12 @@ int main (int argc, char **argv)
   		ROS_INFO("Enter desired coordinate y:\n");
   		std::cin >> goal.target_pose.pose.position.y;
   		currentGoalY = goal.target_pose.pose.position.y;
+  		
+  		geometry_msgs::Point coord_msg;
+  		coord_msg.x = currentGoalX;
+  		coord_msg.y = currentGoalY;
+  		
+  		coord_pub.publish(coord_msg);
 
   		ac.sendGoal(goal,
   				actionlib::SimpleActionClient<assignment_2_2024::PlanningAction>::SimpleDoneCallback(),

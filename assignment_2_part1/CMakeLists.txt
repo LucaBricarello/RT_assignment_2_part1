@@ -57,11 +57,10 @@ add_message_files(
 )
 
 ## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
-#   Service2.srv
-# )
+add_service_files(
+  FILES
+  LastTarget.srv
+)
 
 ## Generate actions in the 'action' folder
 #add_action_files(
@@ -137,6 +136,7 @@ include_directories(
 # add_executable(${PROJECT_NAME}_node src/assignment_2_part1_node.cpp)
 
 add_executable(act_client src/robot_client.cpp)
+add_executable(targ_coords_srv src/target_coords_srv.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -154,6 +154,9 @@ add_executable(act_client src/robot_client.cpp)
 # )
 
 target_link_libraries(act_client
+  ${catkin_LIBRARIES}
+)
+target_link_libraries(targ_coords_srv
   ${catkin_LIBRARIES}
 )
 
