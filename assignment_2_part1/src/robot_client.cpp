@@ -4,6 +4,27 @@
 #include <assignment_2_2024/PlanningAction.h>
 
 
+// Global variables ---------------------------------------
+
+
+float currentGoalX;
+float currentGoalY;
+int cnt = 0;
+
+
+// feedbackClbk ---------------------------------------
+
+
+void feedbackClbk(const assignment_2_2024::PlanningFeedbackConstPtr &feedback)
+{
+    ros::spinOnce(); // Allow processing of subscriber callbacks
+    float threshold = 0.5;
+    if ((abs(feedback->actual_pose.position.x - currentGoalX) < threshold) && (abs(feedback->actual_pose.position.y - currentGoalY) < threshold) && (cnt < 1))
+    {
+    	ROS_INFO("Target successfully reached!");    	
+    	cnt++;
+    }
+}
 
 // main ---------------------------------------
 
@@ -35,11 +56,16 @@ int main (int argc, char **argv)
   	
   		ROS_INFO("Enter desired coordinate x:\n");
   		std::cin >> goal.target_pose.pose.position.x;
+  		currentGoalX = goal.target_pose.pose.position.x;
 
   		ROS_INFO("Enter desired coordinate y:\n");
   		std::cin >> goal.target_pose.pose.position.y;
+  		currentGoalY = goal.target_pose.pose.position.y;
 
-  		ac.sendGoal(goal);
+  		ac.sendGoal(goal,
+  				actionlib::SimpleActionClient<assignment_2_2024::PlanningAction>::SimpleDoneCallback(),
+                        	actionlib::SimpleActionClient<assignment_2_2024::PlanningAction>::SimpleActiveCallback(),
+                        	feedbackClbk);
   	}
   	else if (choice == 2)
   	{
