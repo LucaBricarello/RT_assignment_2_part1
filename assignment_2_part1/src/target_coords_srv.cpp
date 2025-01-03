@@ -23,7 +23,7 @@ void update_targ_coords_clbk(const geometry_msgs::Point::ConstPtr& msg)
 
 int main(int argc, char **argv)
 {
-	ros::init(argc, argv, "Service_node_last_target");
+	ros::init(argc, argv, "service_node_last_target");
 	ros::NodeHandle nh;
 	
 	// Subscriber to the /targ_coords topic
@@ -34,6 +34,3 @@ int main(int argc, char **argv)
 	ros::spin();
 	return 0;
 }
-
-
-

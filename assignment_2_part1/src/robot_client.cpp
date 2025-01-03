@@ -64,7 +64,7 @@ void odomClbk(const nav_msgs::Odometry::ConstPtr &msg)
 
 int main (int argc, char **argv)
 {
-  ros::init(argc, argv, "test_planning");
+  ros::init(argc, argv, "client_to_robotac");
   ros::NodeHandle nh;
   
   // Publisher for the robot's state
