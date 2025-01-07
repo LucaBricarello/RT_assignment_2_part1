@@ -6,6 +6,7 @@
 #include <nav_msgs/Odometry.h>
 #include <assignment_2_part1/RobotState.h> // Custom message
 #include "geometry_msgs/Point.h"
+#include <thread>  // Include for std::thread
 
 
 // Global variables ---------------------------------------
@@ -23,7 +24,6 @@ ros::Publisher state_pub; // Publisher for the robot's state
 
 void feedbackClbk(const assignment_2_2024::PlanningFeedbackConstPtr &feedback)
 {
-    ros::spinOnce(); // Allow processing of subscriber callbacks
     float threshold = 0.5;
     if ((abs(feedback->actual_pose.position.x - currentGoalX) < threshold) && (abs(feedback->actual_pose.position.y - currentGoalY) < threshold) && (cnt < 1))
     {
@@ -85,24 +85,63 @@ int main (int argc, char **argv)
   ac.waitForServer(); //will wait for infinite time
   ROS_INFO("Action server started, asking the user what to do.\n");
   
+  // Create a thread for ros::spin()
+  std::thread spinThread([]() {
+  	ros::spin();
+  });
+
   while (ros::ok())
   {
   	ROS_INFO("Enter 1 to send a new goal, 2 to cancel the current goal, 0 to close the node:\n");
   	
   	int choice; 
   	std::cin >> choice;
+  	if (std::cin.fail()) 
+        {
+            	std::cin.clear();
+            	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		choice = 3;
+        }
   
   	if (choice == 1)
   	{
   		assignment_2_2024::PlanningGoal goal;
   		cnt = 0;
-  	
-  		ROS_INFO("Enter desired coordinate x:\n");
-  		std::cin >> goal.target_pose.pose.position.x;
+  		
+  		while(true)
+  		{
+  			ROS_INFO("Enter desired coordinate x:\n");
+  			std::cin >> goal.target_pose.pose.position.x;
+  			if (std::cin.fail()) 
+        		{
+            			std::cin.clear();
+            			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            			ROS_INFO("Invalid input, enter a number.\n");
+			
+        		}
+        		else
+        		{
+        			break;
+        		}
+        	}	
   		currentGoalX = goal.target_pose.pose.position.x;
-
-  		ROS_INFO("Enter desired coordinate y:\n");
-  		std::cin >> goal.target_pose.pose.position.y;
+  		
+  		while(true)
+  		{
+  			ROS_INFO("Enter desired coordinate y:\n");
+  			std::cin >> goal.target_pose.pose.position.y;
+  			if (std::cin.fail()) 
+        		{
+            			std::cin.clear();
+            			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            			ROS_INFO("Invalid input, enter a number.\n");
+			
+        		}
+        		else
+        		{
+        			break;
+        		}
+  		}
   		currentGoalY = goal.target_pose.pose.position.y;
   		
   		geometry_msgs::Point coord_msg;
