@@ -1,3 +1,28 @@
+/**
+* \file robot_client.cpp
+* \brief Client node for interacting with the robot's action server.
+* \author Luca Bricarello
+* \version 1.1
+* \date 09/03/2025
+*
+* \details
+*
+* **Subscribes to**: <BR>
+* - /odom
+*
+* **Publishes to**: <BR>
+* - /robot_state
+* - /targ_coords
+*
+* **ActionServers**: <BR>
+* - /reaching_goal
+*
+* **Description**: <BR>
+* This node allows a user to send goals to the action server, cancel them, and monitor the robot state.
+* It subscribes to the /odom topic to track the robot's position and velocity and publishes
+* the robot's state and target coordinates.
+**/
+
 #include <ros/ros.h>
 #include <actionlib/client/simple_action_client.h>
 #include <actionlib/client/terminal_state.h>
@@ -11,17 +36,37 @@
 
 // Global variables ---------------------------------------
 
-
+/** 
+* \brief X coordinate of the current goal.
+*/
 float currentGoalX;
+
+/** 
+* \brief Y coordinate of the current goal.
+*/
 float currentGoalY;
+
+/** 
+* \brief Counter used to ensure a single success message.
+*/
 int cnt = 0;
 
+/** 
+* \brief Publisher for the robot's state.
+*/
 ros::Publisher state_pub; // Publisher for the robot's state
 
 
 // feedbackClbk ---------------------------------------
 
-
+/**
+* \brief Callback function for action feedback.
+* 
+* This function checks if the robot has reached its goal within a threshold.
+* If the robot is close enough to the goal, a success message is printed.
+* 
+* \param feedback Feedback message containing the robot's actual position.
+*/
 void feedbackClbk(const assignment_2_2024::PlanningFeedbackConstPtr &feedback)
 {
     float threshold = 0.5;
@@ -35,8 +80,14 @@ void feedbackClbk(const assignment_2_2024::PlanningFeedbackConstPtr &feedback)
 
 // odomClbk ---------------------------------------
 
-
-// Callback for the /odom topic
+/**
+* \brief Callback function for the /odom topic.
+* 
+* Extracts the robot's position and velocity from the Odometry message
+* and publishes it as a custom RobotState message.
+* 
+* \param msg Odometry message containing position and velocity data.
+*/
 void odomClbk(const nav_msgs::Odometry::ConstPtr &msg)
 {
     // Extract position
@@ -61,7 +112,21 @@ void odomClbk(const nav_msgs::Odometry::ConstPtr &msg)
 
 // main ---------------------------------------
 
-
+/**
+* \brief Main function of the client node.
+* 
+* Initializes the ROS node, sets up publishers and subscribers, implements a graphical interface (UI) 
+* to interact with the user and let him send goals to the robot using an action client, it also let's him
+* choose an option to cancel the current goal or another option to close this node.
+* This node performs some controls on the values inserted by the user, and it also creates a new thread
+* that runs the ros::spin() command, this lets the node control for incoming msgs on the subscribed topics
+* and eventually run the associated callback function while independently running the UI.
+* 
+* \param argc Number of input arguments (if any).
+* \param argv Pointer to array of arguments (if any).
+* 
+* \return 0 on successful execution.
+*/
 int main (int argc, char **argv)
 {
   ros::init(argc, argv, "client_to_robotac");
