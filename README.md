@@ -1,3 +1,6 @@
+# Documentation
+The documentation of this package is available at the following link: https://lucabricarello.github.io/RT_assignment_2_part1/
+
 # Requirements
 
  - ROS noetic
