@@ -1,3 +1,6 @@
+# Jupyter notebook
+The jupyter notebook with the code of the action client node is in the folder: assignment_2_part1/notebook/
+
 # Documentation
 The documentation of this package is available at the following link: https://lucabricarello.github.io/RT_assignment_2_part1/
 
