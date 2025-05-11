@@ -1,0 +1,5 @@
+<map id="main" name="main">
+<area shape="rect" id="node1" title="Main function of the client node." alt="" coords="5,31,60,57"/>
+<area shape="rect" id="node2" href="$robot__client_8cpp.html#a47d4cdfbfcee78405d0ddd007fdb578e" title="Callback function for action feedback." alt="" coords="108,5,219,32"/>
+<area shape="rect" id="node3" href="$robot__client_8cpp.html#a8358a627ece7352935def424a619a315" title="Callback function for the /odom topic." alt="" coords="119,56,207,83"/>
+</map>

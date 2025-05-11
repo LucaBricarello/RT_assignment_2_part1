@@ -1,0 +1,4 @@
+<map id="srv_curr_targ_clbk" name="srv_curr_targ_clbk">
+<area shape="rect" id="node1" title="Service callback to return the last recorded target coordinates." alt="" coords="108,5,249,32"/>
+<area shape="rect" id="node2" href="$target__coords__srv_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627" title="Main function of the last target service node." alt="" coords="5,5,60,32"/>
+</map>
